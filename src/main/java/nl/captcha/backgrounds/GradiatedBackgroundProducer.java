@@ -17,8 +17,8 @@ import java.awt.image.BufferedImage;
  */
 public class GradiatedBackgroundProducer implements BackgroundProducer {
 
-    private Color _fromColor = Color.DARK_GRAY;
-    private Color _toColor = Color.WHITE;
+    private Color _fromColor = Color.BLACK;
+    private Color _toColor = Color.ORANGE;
     
     public BufferedImage getBackground(int width, int height) {
         // create an opaque image

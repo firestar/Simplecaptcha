@@ -13,16 +13,16 @@ import static nl.captcha.util.ImageUtil.applyFilter;
  */
 public class DropShadowGimpyRenderer implements GimpyRenderer {
 	private static final int DEFAULT_RADIUS = 3;
-	private static final int DEFAULT_OPACITY = 75;
+	private static final float DEFAULT_OPACITY =(float)0.750;
 	
 	private final int _radius;
-	private final int _opacity;
+	private final float _opacity;
 	
 	public DropShadowGimpyRenderer() {
 		this(DEFAULT_RADIUS, DEFAULT_OPACITY);
 	}
 	
-	public DropShadowGimpyRenderer(int radius, int opacity) {
+	public DropShadowGimpyRenderer(int radius, float opacity) {
 		_radius = radius;
 		_opacity = opacity;
 	}

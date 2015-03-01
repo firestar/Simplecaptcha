@@ -19,20 +19,16 @@ import java.util.Random;
  */
 public class DefaultWordRenderer implements WordRenderer {
 
-	private static final Color DEFAULT_COLOR = Color.BLACK;
+	private static Color DEFAULT_COLOR = Color.CYAN;
 	private static final List<Font> DEFAULT_FONTS = new ArrayList<Font>();
     
     private final Color _color;
     private final List<Font> _fonts;
     
     static {
-    	DEFAULT_FONTS.add(new Font("Arial", Font.BOLD, 40));
-        DEFAULT_FONTS.add(new Font("Courier", Font.BOLD, 40));	
+    	DEFAULT_FONTS.add(new Font("Arial", Font.PLAIN, 50));
     }
     
-    /**
-     * Will render the characters in black and in either 40pt Arial or Courier.
-     */
     public DefaultWordRenderer() {
     	this(DEFAULT_COLOR, DEFAULT_FONTS);
     }
@@ -70,9 +66,9 @@ public class DefaultWordRenderer implements WordRenderer {
             g.setFont(itFont);
 
             GlyphVector gv = itFont.createGlyphVector(frc, itchar);
-            double charWitdth = gv.getVisualBounds().getWidth();
+            double charWitdth = gv.getVisualBounds().getWidth()+5;
 
-            g.drawChars(itchar, 0, itchar.length, startPosX, 35);
+            g.drawChars(itchar, 0, itchar.length, startPosX, 60);
             startPosX = startPosX + (int) charWitdth;
         }
     }

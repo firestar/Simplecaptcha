@@ -3,6 +3,8 @@ package nl.captcha.gimpy;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Overlays a warped grid to the image.
@@ -11,22 +13,42 @@ import java.awt.image.BufferedImage;
  * 
  */
 public class FishEyeGimpyRenderer implements GimpyRenderer {
+	@SuppressWarnings("unused")
 	private final Color _hColor;
+	@SuppressWarnings("unused")
 	private final Color _vColor;
-	
+	private static List<int[]> positions =  new ArrayList<int[]>();
 	public FishEyeGimpyRenderer() {
-		this(Color.BLACK, Color.BLACK);
+		this(Color.WHITE, Color.BLACK);
 	}
 	
 	public FishEyeGimpyRenderer(Color hColor, Color vColor) {
 		_hColor = hColor;
 		_vColor = vColor;
 	}
-
+	public int betterRandom(int start, int end){
+		int kil = 2;
+		int total = 0;
+		for(int x=0;x<kil;x++){
+			total += (int)(end*Math.random());
+		}
+		return (int)( total/kil );
+	}
+	public boolean farfrom(int wMid, int hMid){
+		List<int[]> ps = new ArrayList<int[]>(positions);
+		for(int u=0;u<ps.size();u++){
+			if(Math.abs(ps.get(u)[0]-wMid)<50 || Math.abs(ps.get(u)[1]-hMid)<50){
+				return false;
+			}
+		}
+		positions.add(new int[]{wMid,hMid});
+		return true;
+	}
+	@SuppressWarnings("unused")
     public void gimp(BufferedImage image) {
         int height = image.getHeight();
         int width = image.getWidth();
-
+        
         int hstripes = height / 7;
         int vstripes = width / 7;
 
@@ -34,7 +56,7 @@ public class FishEyeGimpyRenderer implements GimpyRenderer {
         int hspace = height / (hstripes + 1);
         int vspace = width / (vstripes + 1);
 
-        Graphics2D graph = (Graphics2D) image.getGraphics();
+        /*Graphics2D graph = (Graphics2D) image.getGraphics();
         // Draw the horizontal stripes
         for (int i = hspace; i < height; i = i + hspace) {
             graph.setColor(_hColor);
@@ -45,46 +67,50 @@ public class FishEyeGimpyRenderer implements GimpyRenderer {
         for (int i = vspace; i < width; i = i + vspace) {
             graph.setColor(_vColor);
             graph.drawLine(i, 0, i, height);
-        }
+        }*/
+        for(int u=0;u<3;u++){
+        	System.out.print(".");
+        	int wMid = betterRandom(1,width);
+            int hMid = betterRandom(1,height);
+        	if(!farfrom(wMid, hMid)){
+        		u--;
+        		continue;
+        	}
+	        // Create a pixel array of the original image.
+	        // we need this later to do the operations on..
+	        int pix[] = new int[height * width];
+	        int j = 0;
 
-        // Create a pixel array of the original image.
-        // we need this later to do the operations on..
-        int pix[] = new int[height * width];
-        int j = 0;
+	        for (int j1 = 0; j1 < width; j1++) {
+	            for (int k1 = 0; k1 < height; k1++) {
+	                pix[j] = image.getRGB(j1, k1);
+	                j++;
+	            }
+	        }
 
-        for (int j1 = 0; j1 < width; j1++) {
-            for (int k1 = 0; k1 < height; k1++) {
-                pix[j] = image.getRGB(j1, k1);
-                j++;
-            }
-        }
-
-        double distance = ranInt(width / 4, width / 3);
-
-        // put the distortion in the (dead) middle
-        int wMid = image.getWidth() / 2;
-        int hMid = image.getHeight() / 2;
-
-        // again iterate over all pixels..
-        for (int x = 0; x < image.getWidth(); x++) {
-            for (int y = 0; y < image.getHeight(); y++) {
-
-                int relX = x - wMid;
-                int relY = y - hMid;
-
-                double d1 = Math.sqrt(relX * relX + relY * relY);
-                if (d1 < distance) {
-
-                    int j2 = wMid
-                            + (int) (((fishEyeFormula(d1 / distance) * distance) / d1) * (x - wMid));
-                    int k2 = hMid
-                            + (int) (((fishEyeFormula(d1 / distance) * distance) / d1) * (y - hMid));
-                    image.setRGB(x, y, pix[j2 * height + k2]);
-                }
-            }
-        }
-
-        graph.dispose();
+        	double distance = ranInt(width / 4, width / 3);
+        	
+	        // again iterate over all pixels..
+	        for (int x = 0; x < image.getWidth(); x++) {
+	            for (int y = 0; y < image.getHeight(); y++) {
+	
+	                int relX = x - wMid;
+	                int relY = y - hMid;
+	
+	                double d1 = Math.sqrt(relX * relX + relY * relY);
+	                if (d1 < distance) {
+	
+	                    int j2 = wMid
+	                            + (int) (((fishEyeFormula(d1 / distance) * distance) / d1) * (x - wMid));
+	                    int k2 = hMid
+	                            + (int) (((fishEyeFormula(d1 / distance) * distance) / d1) * (y - hMid));
+	                    image.setRGB(x, y, pix[j2 * height + k2]);
+	                }
+	            }
+	        }
+	    }
+        positions =  new ArrayList<int[]>();
+        //graph.dispose();
     }
 
     private final int ranInt(int i, int j) {

@@ -25,7 +25,7 @@ public class CurvedLineNoiseProducer implements NoiseProducer {
     private final float _width;
 
     public CurvedLineNoiseProducer() {
-        this(Color.BLACK, 3.0f);
+        this(Color.WHITE, 3.0f);
     }
 
     public CurvedLineNoiseProducer(Color color, float width) {

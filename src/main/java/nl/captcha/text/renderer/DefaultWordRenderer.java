@@ -19,14 +19,14 @@ import java.util.Random;
  */
 public class DefaultWordRenderer implements WordRenderer {
 
-	private static Color DEFAULT_COLOR = Color.CYAN;
+	private static Color DEFAULT_COLOR = Color.WHITE;
 	private static final List<Font> DEFAULT_FONTS = new ArrayList<Font>();
     
     private final Color _color;
     private final List<Font> _fonts;
     
     static {
-    	DEFAULT_FONTS.add(new Font("Arial", Font.PLAIN, 50));
+    	DEFAULT_FONTS.add(new Font("Arial", Font.PLAIN, 80));
     }
     
     public DefaultWordRenderer() {
@@ -56,7 +56,7 @@ public class DefaultWordRenderer implements WordRenderer {
 
         g.setColor(_color);
         FontRenderContext frc = g.getFontRenderContext();
-        int startPosX = 25;
+        int startPosX = (DEFAULT_FONTS.get(0).getSize()/2);
         char[] wc = word.toCharArray();
         Random generator = new Random();
         for (char element : wc) {
@@ -66,9 +66,9 @@ public class DefaultWordRenderer implements WordRenderer {
             g.setFont(itFont);
 
             GlyphVector gv = itFont.createGlyphVector(frc, itchar);
-            double charWitdth = gv.getVisualBounds().getWidth()+5;
+            double charWitdth = gv.getVisualBounds().getWidth()+10;
 
-            g.drawChars(itchar, 0, itchar.length, startPosX, 60);
+            g.drawChars(itchar, 0, itchar.length, startPosX, (int)((image.getHeight()/2) + ( 50*Math.random())) );
             startPosX = startPosX + (int) charWitdth;
         }
     }
